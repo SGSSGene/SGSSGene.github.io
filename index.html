@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width, initial-scale=1.0">
+    <script>
+    function selectMenu(href) {
+    	document.querySelectorAll('a[class~="selected"]').forEach((tag) => {
+    		tag.classList.remove("selected");
+    	});
+    	document.querySelectorAll('nav a[href="' + href + '"]').forEach((tag) => {
+    		tag.classList.add("selected");
+    	});
+    }
+    document.addEventListener('DOMContentLoaded', (event) => {
+    	document.querySelectorAll('a').forEach((tag) => {
+    		const href = tag.attributes['href'].nodeValue;
+    		tag.onclick = function() { selectMenu(href); };
+    	});
+    
+    });
+    window.addEventListener('popstate', function(e) {
+    	let hash = window.location.hash.substr(1);
+    	document.querySelectorAll('div[id="'+hash+'"]').forEach((tag) => {
+    		console.log("scroll "+hash);
+    		selectMenu("#" + hash);
+    		tag.scrollIntoView();
+    	});
+    });
+    </script>
+    <style>
+    html {
+    	margin: 0px;
+    	height: 100%
+    }
+    body {
+    	display: flex;
+    	margin: 0px;
+    	height: 100%;
+    	font-size: large;
+    }
+    body > * {
+    	overflow-y: scroll;
+    	flex: 1 1 auto;
+    	overflow-x: hidden;
+    	scroll-behavior: smooth;
+    }
+    nav {
+    	flex: 0 0 300px;
+    	background: #f1f1f1;
+    	white-space: nowrap;
+    	padding-left: 10px;
+    	font-size: medium;
+    }
+    a {
+    	color: black;
+    	text-decoration: none;
+    }
+    nav ul {
+    	list-style-type:none;
+    	padding: 0px;
+    	margin: 0px;
+    }
+    a:visited {}
+    nav h1 {
+    	display: inline-flex;
+    	width: 100%;
+    	justify-content: center;
+    }
+    
+    nav h2 {
+    	font-size: 1.1em;
+    	margin: 0px;
+    	margin-top: 20px;
+    	padding: 0px;
+    	display: inline-flex;
+    	width: 100%;
+    	justify-content: center;
+    }
+    nav a {
+    	display: inline-flex;
+    	width: 100%;
+    	justify-content: center;
+    
+    	padding: 3px;
+    }
+    /*nav a > span {
+    	display: inline-flex;
+    	width: 200px;
+    	justify-content: center;
+    }*/
+    nav a:hover {
+    	background: #fff;
+    }
+    nav div:last-child {
+    	margin-bottom: 100px;
+    }
+    body > div {
+    	padding-left: 20px;
+    	padding-right: 20px;
+    }
+    
+    body > div > div {
+    	padding-top: 30px;
+    }
+    body > div > div:last-child {
+    	padding-bottom: 50%;
+    }
+    body li {
+    	padding: 5px;
+    }
+    
+    .inlineCode {
+    	background: lightgray;
+    	padding: 5px;
+    	border-radius: 5px;
+    	font-size: smaller;
+    }
+    a.selected {
+    	background: #ccc;
+    }
+    .code {
+    	background: lightgray;
+    	padding-left: 5px;
+    	border-radius: 5px;
+    }
+    .description {
+    	padding-top: 20px;
+    }
+    div.numbered.code {
+    	white-space: pre-wrap;
+    }
+    div.numbered.code:before {
+    	counter-reset: listing;
+    }
+    div.numbered.code code {
+    	counter-increment: listing;
+    }
+    div.numbered.code code::before {
+    	content: counter(listing) ". ";
+    	display: inline-block;
+    	width: 3em;
+    	text-align: right;
+    }
+    .md.bold {
+    	font-weight: bold;
+    }
+    .md.italic {
+    	font-style: italic
+    }
+    .md.underline {
+    	text-decoration: underline;
+    }
+    .md.link {
+    	text-decoration: underline;
+    }
+    .md.link:hover {
+    	color: blue;
+    }
+    
+    </style>
+        <title>
+            SiLi        </title>
+    </head>
+    <body>
+        <nav>
+            <h1>SiLi</h1>
+            <div>
+                <h2>Pages</h2>
+                <ul>
+                    <li>
+                        <a href="#42">Overview</a>                    </li>
+                    <li>
+                        <a href="#43">Examples</a>                    </li>
+                </ul>
+            </div>
+            <div>
+                <h2>Concepts</h2>
+                <ul>
+                    <li>
+                        <a href="#_concept::Matrix"><span class="inlineCode">_concept::Matrix</span></a>                    </li>
+                    <li>
+                        <a href="#_concept::Vector"><span class="inlineCode">_concept::Vector</span></a>                    </li>
+                </ul>
+            </div>
+            <div>
+                <h2>Classes</h2>
+                <ul>
+                    <li>
+                        <a href="#Matrix"><span class="inlineCode">Matrix</span></a>                    </li>
+                    <li>
+                        <a href="#View"><span class="inlineCode">View</span></a>                    </li>
+                </ul>
+            </div>
+            <div>
+                <h2>Free Matrix Functions</h2>
+                <ul>
+                    <li>
+                        <a href="#at"><span class="inlineCode">at&lt;Row, Col&gt;(m)</span></a>                    </li>
+                    <li>
+                        <a href="#rows"><span class="inlineCode">rows(m)</span></a>                    </li>
+                    <li>
+                        <a href="#cols"><span class="inlineCode">cols(m)</span></a>                    </li>
+                    <li>
+                        <a href="#operator=="><span class="inlineCode">l == r</span></a>                    </li>
+                    <li>
+                        <a href="#operator!="><span class="inlineCode">l != r</span></a>                    </li>
+                    <li>
+                        <a href="#view_diag"><span class="inlineCode">view_diag(m)</span></a>                    </li>
+                    <li>
+                        <a href="#diag"><span class="inlineCode">diag(m)</span></a>                    </li>
+                    <li>
+                        <a href="#view_upper_diag"><span class="inlineCode">view_upper_diag(m)</span></a>                    </li>
+                    <li>
+                        <a href="#view"><span class="inlineCode">view&lt;R0, C0, R1, C1&gt;(m)</span></a>                    </li>
+                    <li>
+                        <a href="#join_rows"><span class="inlineCode">join_rows(l, r)</span></a>                    </li>
+                    <li>
+                        <a href="#join_cols"><span class="inlineCode">join_cols(a, b)</span></a>                    </li>
+                    <li>
+                        <a href="#det"><span class="inlineCode">det(m)</span></a>                    </li>
+                    <li>
+                        <a href="#cross"><span class="inlineCode">cross(l, r)</span></a>                    </li>
+                    <li>
+                        <a href="#sum"><span class="inlineCode">sum(m)</span></a>                    </li>
+                    <li>
+                        <a href="#sum_rows"><span class="inlineCode">sum_rows(m)</span></a>                    </li>
+                    <li>
+                        <a href="#sum_cols"><span class="inlineCode">sum_cols(m)</span></a>                    </li>
+                    <li>
+                        <a href="#inv"><span class="inlineCode">inv(m)</span></a>                    </li>
+                    <li>
+                        <a href="#view_trans"><span class="inlineCode">view_trans(m)</span></a>                    </li>
+                    <li>
+                        <a href="#trans"><span class="inlineCode">trans(m)</span></a>                    </li>
+                    <li>
+                        <a href="#makeI"><span class="inlineCode">SiLi::makeI&lt;Rows, Cols, int&gt;()</span></a>                    </li>
+                    <li>
+                        <a href="#makeI37"><span class="inlineCode">SiLi::makeI&lt;N, int&gt;()</span></a>                    </li>
+                    <li>
+                        <a href="#abs"><span class="inlineCode">abs(m)</span></a>                    </li>
+                </ul>
+            </div>
+            <div>
+                <h2>Matrix Operations</h2>
+                <ul>
+                    <li>
+                        <a href="#operator+"><span class="inlineCode">+m</span></a>                    </li>
+                    <li>
+                        <a href="#operator+9"><span class="inlineCode">l + r</span></a>                    </li>
+                    <li>
+                        <a href="#operator+="><span class="inlineCode">l += r</span></a>                    </li>
+                    <li>
+                        <a href="#operator-"><span class="inlineCode">-m</span></a>                    </li>
+                    <li>
+                        <a href="#operator-12"><span class="inlineCode">l - r</span></a>                    </li>
+                    <li>
+                        <a href="#operator-="><span class="inlineCode">l += r</span></a>                    </li>
+                    <li>
+                        <a href="#operator*"><span class="inlineCode">l * r</span></a>                    </li>
+                    <li>
+                        <a href="#operator*15"><span class="inlineCode">l * s</span></a>                    </li>
+                    <li>
+                        <a href="#operator*16"><span class="inlineCode">s * r</span></a>                    </li>
+                    <li>
+                        <a href="#operator*="><span class="inlineCode">l *= s</span></a>                    </li>
+                    <li>
+                        <a href="#operator/"><span class="inlineCode">l / s</span></a>                    </li>
+                    <li>
+                        <a href="#operator/="><span class="inlineCode">l /= s</span></a>                    </li>
+                </ul>
+            </div>
+            <div>
+                <h2>Free Vector Functions</h2>
+                <ul>
+                    <li>
+                        <a href="#at"><span class="inlineCode">at&lt;Idx&gt;(v);</span></a>                    </li>
+                    <li>
+                        <a href="#norm"><span class="inlineCode">norm(v)</span></a>                    </li>
+                    <li>
+                        <a href="#dot"><span class="inlineCode">dot(l, r)</span></a>                    </li>
+                    <li>
+                        <a href="#outerProd"><span class="inlineCode">outerProd(l, r)</span></a>                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div>
+            <div id="42">
+                <h2>Overview</h2>
+                <div class=description>
+                 SiLi is a great autostorage only library (no heap allocation).                </div>
+                <div class=description>
+                 It uses <span class="md bold">c++20</span> and its purpose is to be used on embedded system                </div>
+                <div class=description>
+                 The main idea is to use fixed size matrices and fixed size                 views onto these matrices.                </div>
+                <hr/>
+            </div>
+            <div id="43">
+                <h2>Examples</h2>
+                <div class=description>
+                 Example of Element Access                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  #include &lt;SiLi/SiLi.h&gt;</code>
+<code class="language-cpp">  #include &lt;SiLi/ostream.h&gt;</code>
+<code class="language-cpp">  int main() {</code>
+<code class="language-cpp">      auto a = SiLi::Matrix{{{3, 4},</code>
+<code class="language-cpp">                             {5, 6}}};</code>
+<code class="language-cpp">      std::cout &lt;&lt; a &lt;&lt; &quot;\n&quot;; // prints {{3, 4},</code>
+<code class="language-cpp">                              //         {5, 6}}</code>
+<code class="language-cpp">      a(0, 0) = a(0, 1) * 2;</code>
+<code class="language-cpp">      std::cout &lt;&lt; a &lt;&lt; &quot;\n&quot;; // prints {{8, 4},</code>
+<code class="language-cpp">                              //         {5, 6}}</code>
+<code class="language-cpp">  }</code>
+                    </div>
+                </div>
+                <div class=description>
+                 Example of <a class="md link" href="#Matrix">Matrix</a> Multiplication:                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  #include &lt;SiLi/SiLi.h&gt;</code>
+<code class="language-cpp">  #include &lt;SiLi/ostream.h&gt;</code>
+<code class="language-cpp">  int main() {</code>
+<code class="language-cpp">      auto a = SiLi::Matrix{{{3, 4, 7},</code>
+<code class="language-cpp">                             {5, 6, 8}}};</code>
+<code class="language-cpp">      auto b = SiLi::Matrix{{{1, 2},</code>
+<code class="language-cpp">                             {4, 5},</code>
+<code class="language-cpp">                             {3, 6}};</code>
+<code class="language-cpp">      auto c = a * b; // c is of type SiLi::Matrix&lt;2, 2, int&gt;</code>
+<code class="language-cpp">      std::cout &lt;&lt; c &lt;&lt; &quot;\n&quot;; // prints {{40, 68},</code>
+<code class="language-cpp">                              //         {53, 88}}</code>
+<code class="language-cpp">  }</code>
+                    </div>
+                </div>
+                <div class=description>
+                 Example of <a class="md link" href="#Matrix">Matrix</a> inversion:                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  #include &lt;SiLi/SiLi.h&gt;</code>
+<code class="language-cpp">  #include &lt;SiLi/ostream.h&gt;</code>
+<code class="language-cpp">  int main() {</code>
+<code class="language-cpp">      auto a = SiLi::Matrix{{{3, 4},</code>
+<code class="language-cpp">                             {5, 6}}};</code>
+<code class="language-cpp">      auto b = inv(a);</code>
+<code class="language-cpp">      std::cout &lt;&lt; b &lt;&lt; &quot;\n&quot;; \\ prints {{ -3,  2},</code>
+<code class="language-cpp">                                         {2.4, -1.5}}</code>
+<code class="language-cpp">  }</code>
+                    </div>
+                </div>
+                <div class=description>
+                 Example of <a class="md link" href="#view">view</a>                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  #include &lt;SiLi/SiLi.h&gt;</code>
+<code class="language-cpp">  #include &lt;SiLi/ostream.h&gt;</code>
+<code class="language-cpp">  int main() {</code>
+<code class="language-cpp">      auto a = SiLi::Matrix{{{ 3,  4, 5},</code>
+<code class="language-cpp">                             { 6,  7, 8},</code>
+<code class="language-cpp">                             { 9, 10, 11}};</code>
+<code class="language-cpp">      std::cout &lt;&lt; a &lt;&lt; &quot;\n&quot;; // prints {{ 3,  4,  5},</code>
+<code class="language-cpp">                              //         { 6,  7,  8},</code>
+<code class="language-cpp">                              //         { 9, 10, 11}}</code>
+<code class="language-cpp">      auto v = view&lt;1, 1, 3, 3&gt;(a); // view to the lower right 2x2 (7, 8, 10, 11) matrix</code>
+<code class="language-cpp">      std::cout &lt;&lt; v &lt;&lt; &quot;\n&quot;; // prints {{ 7,  8},</code>
+<code class="language-cpp">                              //         {10, 11}}</code>
+<code class="language-cpp">      v *= 2.;</code>
+<code class="language-cpp">      std::cout &lt;&lt; v &lt;&lt; &quot;\n&quot;; // prints {{ 7,  8},</code>
+<code class="language-cpp">                              //         {10, 11}}</code>
+<code class="language-cpp">      std::cout &lt;&lt; a &lt;&lt; &quot;\n&quot;; // prints {{ 3,  4,  5},</code>
+<code class="language-cpp">                              //         { 6, 14, 16},</code>
+<code class="language-cpp">                              //         { 9, 20, 22}}</code>
+<code class="language-cpp">  }</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="_concept::Matrix">
+                <h2>Concept of a _concept::Matrix. - <span class="inlineCode">Matrix</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;typename T&gt; concept Matrix = is_matrix&lt;T&gt;::value or is_view&lt;T&gt;::value;</code>
+                </div>
+                <div class=description>
+                 Abstract concept of a matrix. This can be either a <a class="md link" href="#Matrix">Matrix</a> or a <a class="md link" href="#View">View</a>.                 Both can be used everywhere the <a class="md link" href="#_concept::Matrix">_concept::Matrix</a> concept is needed.                </div>
+                <hr/>
+            </div>
+            <div id="_concept::Vector">
+                <h2>Concept of a _concept::Vector. - <span class="inlineCode">Vector</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;typename T&gt; concept Vector = is_vector_v&lt;T&gt;;</code>
+                </div>
+                <div class=description>
+                 Abstract concept of a vector. This can be either a <a class="md link" href="#Matrix">Matrix</a> or a <a class="md link" href="#View">View</a> where either columns or <a class="md link" href="#rows">rows</a> is 1.                </div>
+                <hr/>
+            </div>
+            <div id="Matrix">
+                <h2>Represents a matrix - <span class="inlineCode">Matrix</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template&lt;int _rows, int _cols, typename T&gt; requires (_rows &gt;= 0 and _cols &gt;= 0) class Matrix&lt;_rows, _cols, T&gt;;</code>
+                </div>
+                <div class=description>
+                 Fullfills the <a class="md link" href="#_concept::Matrix">_concept::Matrix</a> concept.                </div>
+                <div class=description>
+                * If _rows or _cols is 1 it fullfills <a class="md link" href="#_concept::Vector">_concept::Vector</a>.                </div>
+                <div>
+                    <h3>Template Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">_rows</span> - number of <a class="md link" href="#rows">rows</a> of the matrix, must be larger or equal to zero                        </li>
+                        <li><span class="md inlineCode">_cols</span> - number of columns of the matrix, must be larger or equal to zero                        </li>
+                        <li><span class="md inlineCode">T</span> - type of the elements                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Methods</h3>
+                    <ul>
+                        <li><span class="md inlineCode">data()</span> - returns pointer to the underlying data structure                        </li>
+                        <li><span class="md inlineCode">m(row,col)</span> - access element at <span class="md inlineCode">row</span> and <span class="md inlineCode">col</span>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <hr/>
+            </div>
+            <div id="View">
+                <h2>Represents a view onto a matrix - <span class="inlineCode">View</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template&lt;int _rows, int _cols, int _stride, typename T, bool _transposed&gt; requires (_rows &gt;= 0 and _cols &gt;= 0 and _stride &gt;= 0) class View&lt;_rows, _cols, _stride, T, _transposed&gt;;</code>
+                </div>
+                <div class=description>
+                 Fullfills the <a class="md link" href="#_concept::Matrix">_concept::Matrix</a> concept.                </div>
+                <div class=description>
+                 If _rows or _cols is 1 it fullfills the <a class="md link" href="#_concept::Vector">_concept::Vector</a> concept.                </div>
+                <div>
+                    <h3>Template Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">_rows</span> - number of <a class="md link" href="#rows">rows</a> of the <a class="md link" href="#view">view</a>, must be larger or equal to zero                        </li>
+                        <li><span class="md inlineCode">_cols</span> - number of columns of the <a class="md link" href="#view">view</a>, must be larger or equal to zero                        </li>
+                        <li><span class="md inlineCode">_stride</span> - length of the stride                        </li>
+                        <li><span class="md inlineCode">T</span> - type of the elements                        </li>
+                        <li><span class="md inlineCode">_transposed</span> - indicates if index access of _rows and _cols should be inverted to simulate transpose access                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Methods</h3>
+                    <ul>
+                        <li><span class="md inlineCode">data()</span> - returns pointer to the underlying data structure                        </li>
+                        <li><span class="md inlineCode">m(row,col)</span> - access element at <span class="md inlineCode">row</span> and <span class="md inlineCode">col</span>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <hr/>
+            </div>
+            <div id="at">
+                <h2>Access element - <span class="inlineCode">at(M&& m)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;int Row, int Col, _concept::Matrix M&gt; constexpr auto at(M&amp;&amp; m) -&gt; auto&amp;;</code>
+                </div>
+                <div class=description>
+                 Checking accessibility at compile time.                </div>
+                <div>
+                    <h3>Template Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">Row</span> - access row. Valid value [0-Row)                        </li>
+                        <li><span class="md inlineCode">Col</span> - access column. Validvalue [0-Col)                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">m</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+returns reference to underlying element
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto m = SiLi::Matrix{{{3, 4},</code>
+<code class="language-cpp">                         {5, 6}}};</code>
+<code class="language-cpp">  at&lt;0, 0&gt;(m) = 5;</code>
+<code class="language-cpp">  at&lt;0, 1&gt;(m) = 6;</code>
+<code class="language-cpp">  std::cout &lt;&lt; m &lt;&lt; &quot;\n&quot;; // prints {{5, 6},</code>
+<code class="language-cpp">                                     {5, 6}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="rows">
+                <h2>Number of rows - <span class="inlineCode">rows(M const& m)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto rows(M const&amp; m);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">m</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+number of <a class="md link" href="#rows">rows</a>
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto m = SiLi::Matrix{{{3, 4, 7},</code>
+<code class="language-cpp">                         {5, 6, 8}}};</code>
+<code class="language-cpp">  std::cout &lt;&lt; rows(m) &lt;&lt; &quot;\n&quot;; // prints 2</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="cols">
+                <h2>Number of columns - <span class="inlineCode">cols(M const& m)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto cols(M const&amp; m);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">m</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+number of columns
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto m = SiLi::Matrix{{{3, 4, 7},</code>
+<code class="language-cpp">                         {5, 6, 8}}};</code>
+<code class="language-cpp">  std::cout &lt;&lt; cols(m) &lt;&lt; &quot;\n&quot;; // prints 3</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="operator==">
+                <h2>Elementwise comparision - <span class="inlineCode">operator==(L const& l, R const& r)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix L, _concept::Matrix R&gt; requires (L::Rows == R::Rows and L::Cols == R::Cols) constexpr auto operator==(L const&amp; l, R const&amp; r) -&gt; bool;</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">l</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        <li><span class="md inlineCode">r</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+true if all elements are equal, otherwise false
+                </div>
+                <div class=description>
+                 l and r must have same dimensions                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{15, 20, 35},</code>
+<code class="language-cpp">                         {25, 30, 40}}};</code>
+<code class="language-cpp">  auto b = SiLi::Matrix{{{15, 20, 35},</code>
+<code class="language-cpp">                         {25, 30, 40}}};</code>
+<code class="language-cpp">  auto c = SiLi::Matrix{{{15, 20, 35},</code>
+<code class="language-cpp">                         {25, 30, 43}}};</code>
+<code class="language-cpp">  std::cout &lt;&lt; (a == b) &lt;&lt; &quot;\n&quot;; // prints 1</code>
+<code class="language-cpp">  std::cout &lt;&lt; (a == c) &lt;&lt; &quot;\n&quot;; // prints 0</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="operator!=">
+                <h2>Elementwise comparision - <span class="inlineCode">operator!=(L const& l, R const& r)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix L, _concept::Matrix R&gt; requires (L::Rows == R::Rows and L::Cols == R::Cols) constexpr auto operator!=(L const&amp; l, R const&amp; r) -&gt; bool;</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">l</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        <li><span class="md inlineCode">r</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+false if all element are equal, otherwise true
+                </div>
+                <div class=description>
+                 l and r must have same dimensions                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{15, 20, 35},</code>
+<code class="language-cpp">                         {25, 30, 40}}};</code>
+<code class="language-cpp">  auto b = SiLi::Matrix{{{15, 20, 35},</code>
+<code class="language-cpp">                         {25, 30, 40}}};</code>
+<code class="language-cpp">  auto c = SiLi::Matrix{{{15, 20, 35},</code>
+<code class="language-cpp">                         {25, 30, 43}}};</code>
+<code class="language-cpp">  std::cout &lt;&lt; (a != b) &lt;&lt; &quot;\n&quot;; // prints 0</code>
+<code class="language-cpp">  std::cout &lt;&lt; (a != c) &lt;&lt; &quot;\n&quot;; // prints 1</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="view_diag">
+                <h2>Diagonal view - <span class="inlineCode">view_diag(M&& m)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto view_diag(M&amp;&amp; m);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">m</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+<a class="md link" href="#View">View</a> representing a column vector that gives access to the diagonal of m
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{15, 20, 35},</code>
+<code class="language-cpp">                         {25, 30, 40}}};</code>
+<code class="language-cpp">  auto v = view_diag(a);</code>
+<code class="language-cpp">  std::cout &lt;&lt; rows(v) &lt;&lt; &quot;x&quot; &lt;&lt; cols(v) &lt;&lt; &quot;\n&quot;; // prints 2x1</code>
+<code class="language-cpp">  std::cout &lt;&lt; v(0) &lt;&lt; &quot; &quot; &lt;&lt; v(1) &lt;&lt; &quot;\n&quot;; // prints 15 and 30</code>
+<code class="language-cpp">  v(0) = 7;</code>
+<code class="language-cpp">  v(1) = 8;</code>
+<code class="language-cpp">  std::cout &lt;&lt; a &lt;&lt; &quot;\n&quot;; // prints {{ 7, 20, 35}</code>
+<code class="language-cpp">                                     {25,  8, 40}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="diag">
+                <h2>Diagonal - <span class="inlineCode">diag(M const& m)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto diag(M const&amp; m);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">m</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+<a class="md link" href="#Matrix">Matrix</a> as a column vector with the diagonal values of m
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{15, 20, 35},</code>
+<code class="language-cpp">                         {25, 30, 40}}};</code>
+<code class="language-cpp">  auto v = diag(a);</code>
+<code class="language-cpp">  std::cout &lt;&lt; rows(v) &lt;&lt; &quot;x&quot; &lt;&lt; cols(v) &lt;&lt; &quot;\n&quot;; // prints 2x1</code>
+<code class="language-cpp">  std::cout &lt;&lt; v(0) &lt;&lt; &quot; &quot; &lt;&lt; v(1) &lt;&lt; &quot;\n&quot;; // prints 15 and 30</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="view_upper_diag">
+                <h2>Super diagonal view - <span class="inlineCode">view_upper_diag(M&& m)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto view_upper_diag(M&amp;&amp; m);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">m</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+<a class="md link" href="#View">View</a> representing a column vector that gives access to the super diagonal of m
+                </div>
+                <div class=description>
+                 The super diagonal is the diagonal above the diagonal                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{15, 20, 35},</code>
+<code class="language-cpp">                         {25, 30, 40}}};</code>
+<code class="language-cpp">  auto v = view_upper_diag(a);</code>
+<code class="language-cpp">  std::cout &lt;&lt; rows(v) &lt;&lt; &quot;x&quot; &lt;&lt; cols(v) &lt;&lt; &quot;\n&quot;; // prints 2x1</code>
+<code class="language-cpp">  std::cout &lt;&lt; v(0) &lt;&lt; &quot; &quot; &lt;&lt; v(1) &lt;&lt; &quot;\n&quot;; // prints 20 and 40</code>
+<code class="language-cpp">  v(0) = 7;</code>
+<code class="language-cpp">  v(1) = 8;</code>
+<code class="language-cpp">  std::cout &lt;&lt; a &lt;&lt; &quot;\n&quot;; // prints {{15,  7, 35}</code>
+<code class="language-cpp">                                     {25, 30,  8}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="view">
+                <h2>View - <span class="inlineCode">view(M&& m)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;int start_row, int start_col, int end_row, int end_col, _concept::Matrix M&gt;     requires (end_row &lt;= rows_v&lt;M&gt; and end_col &lt;= cols_v&lt;M&gt;) constexpr auto view(M&amp;&amp; m);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">start_row</span> - starting row                        </li>
+                        <li><span class="md inlineCode">start_col</span> - starting column                        </li>
+                        <li><span class="md inlineCode">end_row</span> - end row (exclusive). Use SiLi::End to indicate <a class="md link" href="#rows">rows</a>(v).                        </li>
+                        <li><span class="md inlineCode">end_col</span> - end column (exclusive). Use SiLi::End to indicate <a class="md link" href="#cols">cols</a>(v).                        </li>
+                        <li><span class="md inlineCode">v</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+<a class="md link" href="#View">View</a>
+                </div>
+                <div class=description>
+                 Returns a <a class="md link" href="#view">view</a> onto a matrix                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{ 1,  2,  3,  4,  5},</code>
+<code class="language-cpp">                         { 6,  7,  8,  9, 10},</code>
+<code class="language-cpp">                         {11, 12, 13, 14, 15},</code>
+<code class="language-cpp">                         {16, 17, 18, 19, 20}}};</code>
+<code class="language-cpp">  auto v0 = view&lt;1, 1, 3, 3&gt;(a);</code>
+<code class="language-cpp">  std::cout &lt;&lt; rows(v0) &lt;&lt; &quot;x&quot; &lt;&lt; cols(v0) &lt;&lt; &quot;\n&quot;; // prints 2x2</code>
+<code class="language-cpp">  std::cout &lt;&lt; v0 &lt;&lt; &quot;\n&quot;; // prints {{ 7,  8},</code>
+<code class="language-cpp">                                       12, 13}</code>
+<code class="language-cpp">  auto v1 = view&lt;2, 3, SiLi::End, SiLi::End&gt;(a);</code>
+<code class="language-cpp">  std::cout &lt;&lt; rows(v1) &lt;&lt; &quot;x&quot; &lt;&lt; cols(v1) &lt;&lt; &quot;\n&quot;; // prints 2x2</code>
+<code class="language-cpp">  std::cout &lt;&lt; v1 &lt;&lt; &quot;\n&quot;; // prints {{14, 15},</code>
+<code class="language-cpp">                                       19, 20}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="join_rows">
+                <h2>Joins rows - <span class="inlineCode">join_rows(L const& l, R const& r)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix L, _concept::Matrix R&gt; requires (L::Rows == R::Rows) constexpr auto join_rows(L const&amp; l, R const&amp; r);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">l</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        <li><span class="md inlineCode">r</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+<a class="md link" href="#Matrix">Matrix</a> of joined <a class="md link" href="#rows">rows</a> of l and r
+                </div>
+                <div class=description>
+                 l and r must have same number of <a class="md link" href="#rows">rows</a>.                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{ 1,  2,  3},</code>
+<code class="language-cpp">                         {11, 12, 13}}};</code>
+<code class="language-cpp">  auto b = SiLi::Matrix{{{ 4,  5,  6},</code>
+<code class="language-cpp">                         {14, 15, 16}}};</code>
+<code class="language-cpp">  auto v = join_rows(a, b);</code>
+<code class="language-cpp">  std::cout &lt;&lt; rows(v) &lt;&lt; &quot;x&quot; &lt;&lt; cols(v) &lt;&lt; &quot;\n&quot;; // prints 2x6</code>
+<code class="language-cpp">  std::cout &lt;&lt; v &lt;&lt; &quot;\n&quot;; // prints {{ 1,  2,  3,  4,  5,  6},</code>
+<code class="language-cpp">                                     {11, 12, 13, 14, 15, 16}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="join_cols">
+                <h2>Joins columns - <span class="inlineCode">join_cols(L const& l, R const& r)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix L, _concept::Matrix R&gt; requires (L::Cols == R::Cols) constexpr auto join_cols(L const&amp; l, R const&amp; r);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">l</span> - Viewable                        </li>
+                        <li><span class="md inlineCode">r</span> - Viewable                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+<a class="md link" href="#Matrix">Matrix</a> of joined columns of l and r
+                </div>
+                <div class=description>
+                 l and r must have same number of columns.                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{ 1,  2,  3},</code>
+<code class="language-cpp">                         {11, 12, 13}}};</code>
+<code class="language-cpp">  auto b = SiLi::Matrix{{{ 4,  5,  6},</code>
+<code class="language-cpp">                         {14, 15, 16}}};</code>
+<code class="language-cpp">  auto v = join_cols(a, b);</code>
+<code class="language-cpp">  std::cout &lt;&lt; rows(v) &lt;&lt; &quot;x&quot; &lt;&lt; cols(v) &lt;&lt; &quot;\n&quot;; // prints 4x3</code>
+<code class="language-cpp">  std::cout &lt;&lt; v &lt;&lt; &quot;\n&quot;; // prints {{ 1,  2,  3},</code>
+<code class="language-cpp">                                     {11, 12, 13},</code>
+<code class="language-cpp">                                     { 4,  5,  6},</code>
+<code class="language-cpp">                                     {14, 15, 16}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="det">
+                <h2>Compute determinant - <span class="inlineCode">det(M const& m)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix M&gt; requires (M::Rows == M::Cols and M::Rows &gt; 3) constexpr auto det(M const&amp; m);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">m</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a> must have same number of <a class="md link" href="#rows">rows</a> and columns                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+Determinant of m
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{ 1,  2},</code>
+<code class="language-cpp">                         {11, 12}}};</code>
+<code class="language-cpp">  auto v = det(a);</code>
+<code class="language-cpp">  std::cout &lt;&lt; v &lt;&lt; &quot;\n&quot;; // prints -10</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="cross">
+                <h2>Cross product of two vectors. - <span class="inlineCode">cross(L const& l, R const& r)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Vector L, _concept::Vector R&gt; requires (length_v&lt;R&gt; == 3 and length_v&lt;L&gt; == 3) constexpr auto cross(L const&amp; l, R const&amp; r);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">l</span> - <a class="md link" href="#_concept::Vector">_concept::Vector</a> of length 3.                        </li>
+                        <li><span class="md inlineCode">r</span> - <a class="md link" href="#_concept::Vector">_concept::Vector</a> of length.                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+<a class="md link" href="#Matrix">Matrix</a> of size 3×1 with <a class="md link" href="#cross">cross</a> product of l and r.
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{ 1},</code>
+<code class="language-cpp">                         { 2},</code>
+<code class="language-cpp">                         { 3}}};</code>
+<code class="language-cpp">  auto b = SiLi::Matrix{{{ 4},</code>
+<code class="language-cpp">                         { 5},</code>
+<code class="language-cpp">                         { 6}}};</code>
+<code class="language-cpp">  auto v = cross(a, b);</code>
+<code class="language-cpp">  std::cout &lt;&lt; v &lt;&lt; &quot;\n&quot;; // prints {{-3},</code>
+<code class="language-cpp">                                     { 6},</code>
+<code class="language-cpp">                                     {-3}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="sum">
+                <h2>Sum of all elements. - <span class="inlineCode">sum(M const& m)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto sum(M const&amp; m);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">m</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+Sum off all elements of m.
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{3, 4, 7},</code>
+<code class="language-cpp">                         {5, 6, 8}}};</code>
+<code class="language-cpp">  auto c = sum(a)</code>
+<code class="language-cpp">  std::cout &lt;&lt; c &lt;&lt; &quot;\n&quot;; // prints 33</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="sum_rows">
+                <h2>Sum of each row. - <span class="inlineCode">sum_rows(M const& m)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto sum_rows(M const&amp; m);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">m</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+Column vector with the sums of each row of m
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{3, 4, 7},</code>
+<code class="language-cpp">                         {5, 6, 8}}};</code>
+<code class="language-cpp">  auto c = sum_rows(a)</code>
+<code class="language-cpp">  std::cout &lt;&lt; c &lt;&lt; &quot;\n&quot;; // prints {{14}</code>
+<code class="language-cpp">                                     {19}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="sum_cols">
+                <h2>Sum of each column. - <span class="inlineCode">sum_cols(M const& m)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto sum_cols(M const&amp; m);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">m</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+Row vector with the sums of each column of m
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{3, 4, 7},</code>
+<code class="language-cpp">                         {5, 6, 8}}};</code>
+<code class="language-cpp">  auto c = sum_cols(a)</code>
+<code class="language-cpp">  std::cout &lt;&lt; c &lt;&lt; &quot;\n&quot;; // prints {{8, 10, 15}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="inv">
+                <h2>Compute inverse - <span class="inlineCode">inv(M m)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix M&gt; requires (M::Rows == M::Cols and M::Rows &gt; 3) constexpr auto inv(M m) -&gt; std::tuple&lt;typename M::value_t, M&gt;;</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">m</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a> must have same number of <a class="md link" href="#rows">rows</a> as number of <a class="md link" href="#cols">cols</a>.                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+Returns tuple of determinant and inverse, if detereminant is zero the inverse is invalid.
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{ 1.,  2.},</code>
+<code class="language-cpp">                         {11., 12.}}};</code>
+<code class="language-cpp">  auto [v, m] = inv(a);</code>
+<code class="language-cpp">  std::cout &lt;&lt; v &lt;&lt; &quot;\n&quot;; // prints -10</code>
+<code class="language-cpp">  std::cout &lt;&lt; m &lt;&lt; &quot;\n&quot;; // prints {{-1.2,  0.2},</code>
+<code class="language-cpp">                                     { 1.1, -0.1}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="view_trans">
+                <h2>Transposed view - <span class="inlineCode">view_trans(M&& m)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto view_trans(M&amp;&amp; m);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">m</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+<a class="md link" href="#Matrix">Matrix</a> of the transposed of m
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{ 1,  2,  3},</code>
+<code class="language-cpp">                         {11, 12,  4}}};</code>
+<code class="language-cpp">  auto v = view_trans(a);</code>
+<code class="language-cpp">  std::cout &lt;&lt; m &lt;&lt; &quot;\n&quot;; // prints {{1, 11},</code>
+<code class="language-cpp">                                     {2, 12},</code>
+<code class="language-cpp">                                     {3, 13}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="trans">
+                <h2>Transposed - <span class="inlineCode">trans(M&& m)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto trans(M&amp;&amp; m);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">m</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+<a class="md link" href="#Matrix">Matrix</a> of the transposed of m
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{ 1,  2,  3},</code>
+<code class="language-cpp">                         {11, 12,  4}}};</code>
+<code class="language-cpp">  auto v = trans(a);</code>
+<code class="language-cpp">  std::cout &lt;&lt; m &lt;&lt; &quot;\n&quot;; // prints {{1, 11},</code>
+<code class="language-cpp">                                     {2, 12},</code>
+<code class="language-cpp">                                     {3, 13}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="makeI">
+                <h2>Identity matrix - <span class="inlineCode">makeI()</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;int Rows, int Cols, typename T&gt; constexpr auto makeI();</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">Rows</span> - number of <a class="md link" href="#rows">rows</a>                        </li>
+                        <li><span class="md inlineCode">Cols</span> - number of columns                        </li>
+                        <li><span class="md inlineCode">T</span> - type of each element                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+matrix with ones on the diagonal
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::makeI&lt;3, 4, int&gt;();</code>
+<code class="language-cpp">  std::cout &lt;&lt; a &lt;&lt; &quot;\n&quot;; // prints {{1, 0, 0, 0},</code>
+<code class="language-cpp">                                     {0, 1, 0, 0},</code>
+<code class="language-cpp">                                     {0, 0, 1, 0}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="makeI37">
+                <h2>Identity matrix - <span class="inlineCode">makeI()</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;int N, typename T&gt; constexpr auto makeI();</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">N</span> - size of the matrix                        </li>
+                        <li><span class="md inlineCode">T</span> - type of each element                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+matrix with ones on the diagonal
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::makeI&lt;3, int&gt;();</code>
+<code class="language-cpp">  std::cout &lt;&lt; a &lt;&lt; &quot;\n&quot;; // prints {{1, 0, 0},</code>
+<code class="language-cpp">                                     {0, 1, 0},</code>
+<code class="language-cpp">                                     {0, 0, 1}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="abs">
+                <h2>Compute abs - <span class="inlineCode">abs(M const& m)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto abs(M const&amp; m);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">m</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+the absolute values
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{ -3.},</code>
+<code class="language-cpp">                         { -4.},</code>
+<code class="language-cpp">                         { -5.}}};</code>
+<code class="language-cpp">  auto v = abs(a);</code>
+<code class="language-cpp">  std::cout &lt;&lt; v &lt;&lt; &quot;\n&quot;; // prints {{3},</code>
+<code class="language-cpp">                          // {4},</code>
+<code class="language-cpp">                          // {5}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="operator+">
+                <h2>Copy of m - <span class="inlineCode">operator+(M const& m)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto operator+(M const&amp; m);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">m</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+copy of m with <span class="md inlineCode">+</span> applied to every element
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto m = SiLi::Matrix{{{3, 4, 7},</code>
+<code class="language-cpp">                         {5, 6, 8}}};</code>
+<code class="language-cpp">  auto m2 = +m;</code>
+<code class="language-cpp">  std::cout &lt;&lt; m &lt;&lt; &quot;\n&quot;;</code>
+<code class="language-cpp">  std::cout &lt;&lt; m2 &lt;&lt; &quot;\n&quot;;</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="operator+9">
+                <h2>Elementwise addition - <span class="inlineCode">operator+(L const& l, R const& r)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix L, _concept::Matrix R&gt; constexpr auto operator+(L const&amp; l, R const&amp; r);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">l</span> - left <a class="md link" href="#_concept::Matrix">_concept::Matrix</a> of addition                        </li>
+                        <li><span class="md inlineCode">r</span> - right <a class="md link" href="#_concept::Matrix">_concept::Matrix</a> of addition                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+<a class="md link" href="#Matrix">Matrix</a> with l and r
+                </div>
+                <div class=description>
+                 l and r must have the same dimension.                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{3, 4, 7},</code>
+<code class="language-cpp">                         {5, 6, 8}}};</code>
+<code class="language-cpp">  auto b = SiLi::Matrix{{{1, 2, 3},</code>
+<code class="language-cpp">                         {4, 5, 6}}};</code>
+<code class="language-cpp">  auto c = a + b;</code>
+<code class="language-cpp">  std::cout &lt;&lt; c &lt;&lt; &quot;\n&quot;; // prints {{4,  6, 10},</code>
+<code class="language-cpp">                                     {9, 11, 14}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="operator+=">
+                <h2>Elementwise addition - <span class="inlineCode">operator+=(L&& l, R const& r)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix L, _concept::Matrix R&gt; constexpr auto operator+=(L&amp;&amp; l, R const&amp; r) -&gt; auto&amp;;</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">l</span> - left <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        <li><span class="md inlineCode">r</span> - right <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+reference to l
+                </div>
+                <div class=description>
+                 l and r must have the same dimension.                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{3, 4, 7},</code>
+<code class="language-cpp">                         {5, 6, 8}}};</code>
+<code class="language-cpp">  auto b = SiLi::Matrix{{{1, 2, 3},</code>
+<code class="language-cpp">                         {4, 5, 6}}};</code>
+<code class="language-cpp">  auto a += b;</code>
+<code class="language-cpp">  std::cout &lt;&lt; a &lt;&lt; &quot;\n&quot;; // prints {{4,  6, 10},</code>
+<code class="language-cpp">                                     {9, 11, 14}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="operator-">
+                <h2>Elementwise negation - <span class="inlineCode">operator-(M const& m)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto operator-(M const&amp; m);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">m</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+<a class="md link" href="#Matrix">Matrix</a> with negated elements
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto m = SiLi::Matrix{{{3, 4, 7},</code>
+<code class="language-cpp">                         {5, 6, 8}}};</code>
+<code class="language-cpp">  auto m2 = -m;</code>
+<code class="language-cpp">  std::cout &lt;&lt; m &lt;&lt; &quot;\n&quot;;</code>
+<code class="language-cpp">  std::cout &lt;&lt; m2 &lt;&lt; &quot;\n&quot;;</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="operator-12">
+                <h2>Elementwise subtraction - <span class="inlineCode">operator-(L const& l, R const& r)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix L, _concept::Matrix R&gt; constexpr auto operator-(L const&amp; l, R const&amp; r);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">l</span> - left <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        <li><span class="md inlineCode">r</span> - right <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+matrix with (l - r)
+                </div>
+                <div class=description>
+                 l and r must have the same dimension.                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{3, 4, 7},</code>
+<code class="language-cpp">                         {5, 6, 8}}};</code>
+<code class="language-cpp">  auto b = SiLi::Matrix{{{1, 2, 3},</code>
+<code class="language-cpp">                         {4, 5, 6}}};</code>
+<code class="language-cpp">  auto c = a - b;</code>
+<code class="language-cpp">  std::cout &lt;&lt; c &lt;&lt; &quot;\n&quot;; // prints {{2,  2, 4},</code>
+<code class="language-cpp">                                     {1,  1, 2}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="operator-=">
+                <h2>Elementwise subtraction - <span class="inlineCode">operator-=(L& l, R const& r)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix L, _concept::Matrix R&gt; constexpr auto operator-=(L&amp; l, R const&amp; r) -&gt; auto&amp;;</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">l</span> - left <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        <li><span class="md inlineCode">r</span> - right <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+reference to l
+                </div>
+                <div class=description>
+                 l and r must have the same dimension.                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{3, 4, 7},</code>
+<code class="language-cpp">                         {5, 6, 8}}};</code>
+<code class="language-cpp">  auto b = SiLi::Matrix{{{1, 2, 3},</code>
+<code class="language-cpp">                         {4, 5, 6}}};</code>
+<code class="language-cpp">  auto a += b;</code>
+<code class="language-cpp">  std::cout &lt;&lt; a &lt;&lt; &quot;\n&quot;; // prints {{2,  2, 4},</code>
+<code class="language-cpp">                                     {1,  1, 2}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="operator*">
+                <h2>Matrix multiplication - <span class="inlineCode">operator*(L const& l, R const& r)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix L, _concept::Matrix R&gt; requires (L::Cols == R::Rows) constexpr auto operator*(L const&amp; l, R const&amp; r);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">l</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        <li><span class="md inlineCode">r</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+<a class="md link" href="#Matrix">Matrix</a> with result of l and r multiplication
+                </div>
+                <div class=description>
+                 l must have the same number of columns as r has <a class="md link" href="#rows">rows</a>.                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{3, 4, 7},</code>
+<code class="language-cpp">                         {5, 6, 8}}};</code>
+<code class="language-cpp">  auto b = SiLi::Matrix{{{1, 2},</code>
+<code class="language-cpp">                         {4, 5},</code>
+<code class="language-cpp">                         {3, 6}};</code>
+<code class="language-cpp">  auto c = a * b; // c is of type SiLi::Matrix&lt;2, 2, int&gt;</code>
+<code class="language-cpp">  std::cout &lt;&lt; c &lt;&lt; &quot;\n&quot;; // prints {{40, 68},</code>
+<code class="language-cpp">                                     {53, 88}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="operator*15">
+                <h2>Scalar multiplication - <span class="inlineCode">operator*(L const& l, value_t<L> const& s)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix L&gt; constexpr auto operator*(L const&amp; l, value_t&lt;L&gt; const&amp; s);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">l</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        <li><span class="md inlineCode">s</span> - scalar value                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+<a class="md link" href="#Matrix">Matrix</a> with each element multiplied with s
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{3, 4, 7},</code>
+<code class="language-cpp">                         {5, 6, 8}}};</code>
+<code class="language-cpp">  auto c = a * 5;</code>
+<code class="language-cpp">  std::cout &lt;&lt; c &lt;&lt; &quot;\n&quot;; // prints {{15, 20, 35},</code>
+<code class="language-cpp">                                     {25, 30, 40}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="operator*16">
+                <h2>Scalar multiplication - <span class="inlineCode">operator*(value_t<R> const& s, R&& r)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix R&gt; constexpr auto operator*(value_t&lt;R&gt; const&amp; s, R&amp;&amp; r);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">s</span> - scalar value                        </li>
+                        <li><span class="md inlineCode">r</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+<a class="md link" href="#Matrix">Matrix</a> with each element multiplied with s
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{3, 4, 7},</code>
+<code class="language-cpp">                         {5, 6, 8}}};</code>
+<code class="language-cpp">  auto c = 5 * a;</code>
+<code class="language-cpp">  std::cout &lt;&lt; c &lt;&lt; &quot;\n&quot;; // prints {{15, 20, 35},</code>
+<code class="language-cpp">                                     {25, 30, 40}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="operator*=">
+                <h2>Scalar multiplication - <span class="inlineCode">operator*=(L&& l, value_t<L> const& s)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix L&gt; constexpr auto operator*=(L&amp;&amp; l, value_t&lt;L&gt; const&amp; s) -&gt; auto&amp;;</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">l</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        <li><span class="md inlineCode">s</span> - scalar value                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+Referenc to l
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{3, 4, 7},</code>
+<code class="language-cpp">                         {5, 6, 8}}};</code>
+<code class="language-cpp">  auto a *= 5;</code>
+<code class="language-cpp">  std::cout &lt;&lt; a &lt;&lt; &quot;\n&quot;; // prints {{15, 20, 35},</code>
+<code class="language-cpp">                                     {25, 30, 40}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="operator/">
+                <h2>Divide elements by a scalar - <span class="inlineCode">operator/(L const& l, value_t<L> const& s)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix L&gt; constexpr auto operator/(L const&amp; l, value_t&lt;L&gt; const&amp; s);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">l</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        <li><span class="md inlineCode">s</span> - scalar                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+<a class="md link" href="#Matrix">Matrix</a> same size and type as l
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{15, 20, 35},</code>
+<code class="language-cpp">                         {25, 30, 40}}};</code>
+<code class="language-cpp">  auto c = a / 5;</code>
+<code class="language-cpp">  std::cout &lt;&lt; c &lt;&lt; &quot;\n&quot;; // prints {{3, 4, 7},</code>
+<code class="language-cpp">                                     {5, 6, 8}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="operator/=">
+                <h2>Divide elementwise by a scalar - <span class="inlineCode">operator/=(L&& l, value_t<L> const& s)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Matrix L&gt; constexpr auto operator/=(L&amp;&amp; l, value_t&lt;L&gt; const&amp; s) -&gt; L&amp;;</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">l</span> - <a class="md link" href="#_concept::Matrix">_concept::Matrix</a>                        </li>
+                        <li><span class="md inlineCode">s</span> - scalar                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+reference to l
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{15, 20, 35},</code>
+<code class="language-cpp">                         {25, 30, 40}}};</code>
+<code class="language-cpp">  a /= 5;</code>
+<code class="language-cpp">  std::cout &lt;&lt; c &lt;&lt; &quot;\n&quot;; // prints {{3, 4, 7},</code>
+<code class="language-cpp">                                     {5, 6, 8}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="at">
+                <h2>Access element - <span class="inlineCode">at(V&& v)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;int Idx, _concept::Vector V&gt; constexpr auto at(V&amp;&amp; v) -&gt; auto&amp;;</code>
+                </div>
+                <div class=description>
+                 Checking accessibility at compile time.                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">Idx</span> - row access                        </li>
+                        <li><span class="md inlineCode">m</span> - <a class="md link" href="#_concept::Vector">_concept::Vector</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+returns reference to underlying element
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto m = SiLi::Matrix{{{3},</code>
+<code class="language-cpp">                         {5}}};</code>
+<code class="language-cpp">  at&lt;0&gt;(m) = 5;</code>
+<code class="language-cpp">  at&lt;1&gt;(m) = 6;</code>
+<code class="language-cpp">  std::cout &lt;&lt; m &lt;&lt; &quot;\n&quot;; // prints {{5},</code>
+<code class="language-cpp">                                     {6}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="norm">
+                <h2>Compute norm - <span class="inlineCode">norm(V const& v)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Vector V&gt; constexpr auto norm(V const&amp; v);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">v</span> - <a class="md link" href="#_concept::Vector">_concept::Vector</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+the <a class="md link" href="#norm">norm</a> (also considered as the length).
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{ 3.},</code>
+<code class="language-cpp">                         { 4.},</code>
+<code class="language-cpp">                         { 5.}}};</code>
+<code class="language-cpp">  auto v = norm(a);</code>
+<code class="language-cpp">  std::cout &lt;&lt; v &lt;&lt; &quot;\n&quot;; // prints 7.0711</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="dot">
+                <h2>Dot product of two vectors - <span class="inlineCode">dot(L const& l, R const& r)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Vector L, _concept::Vector R&gt; requires(length_v&lt;L&gt; == length_v&lt;R&gt;) constexpr auto dot(L const&amp; l, R const&amp; r);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">l</span> - <a class="md link" href="#_concept::Vector">_concept::Vector</a>                        </li>
+                        <li><span class="md inlineCode">r</span> - <a class="md link" href="#_concept::Vector">_concept::Vector</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+the dot product (also called scalar product) of l and r. l and r must be vectors of the same length
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{ 1},</code>
+<code class="language-cpp">                         { 2},</code>
+<code class="language-cpp">                         { 3}}};</code>
+<code class="language-cpp">  auto b = SiLi::Matrix{{{ 4},</code>
+<code class="language-cpp">                         { 5},</code>
+<code class="language-cpp">                         { 6}}};</code>
+<code class="language-cpp">  auto v = dot(a, b);</code>
+<code class="language-cpp">  std::cout &lt;&lt; v &lt;&lt; &quot;\n&quot;; // prints 32</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div id="outerProd">
+                <h2>Outer product - <span class="inlineCode">outerProd(L const& l, R const& r)</span></h2>
+                <div class="code language-cpp">
+<code class="language-cpp">template &lt;_concept::Vector L, _concept::Vector R&gt; constexpr auto outerProd(L const&amp; l, R const&amp; r);</code>
+                </div>
+                <div>
+                    <h3>Parameters</h3>
+                    <ul>
+                        <li><span class="md inlineCode">l</span> - <a class="md link" href="#_concept::Vector">_concept::Vector</a>                        </li>
+                        <li><span class="md inlineCode">r</span> - <a class="md link" href="#_concept::Vector">_concept::Vector</a>                        </li>
+                        </ul>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Return</h3>
+<a class="md link" href="#Matrix">Matrix</a> with the outer product of l and r
+                </div>
+                <div>
+                    <h3>Example</h3>
+                    <div class="numbered code language-cpp">
+<code class="language-cpp">  auto a = SiLi::Matrix{{{ 1},</code>
+<code class="language-cpp">                         { 2},</code>
+<code class="language-cpp">                         { 3}}};</code>
+<code class="language-cpp">  auto b = SiLi::Matrix{{{ 4},</code>
+<code class="language-cpp">                         { 5},</code>
+<code class="language-cpp">                         { 6}}};</code>
+<code class="language-cpp">  auto v = outerProd(a, b);</code>
+<code class="language-cpp">  std::cout &lt;&lt; v &lt;&lt; &quot;\n&quot;; // prints {{ 4,  5,  6},</code>
+<code class="language-cpp">                          //         { 8, 10, 12},</code>
+<code class="language-cpp">                          //         {12, 15, 18}}</code>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+        </div>
+    </body>
+</html>
