@@ -5,159 +5,168 @@
     <meta name=viewport content="width=device-width, initial-scale=1.0">
     <script>
     function selectMenu(href) {
-    	document.querySelectorAll('a[class~="selected"]').forEach((tag) => {
-    		tag.classList.remove("selected");
-    	});
-    	document.querySelectorAll('nav a[href="' + href + '"]').forEach((tag) => {
-    		tag.classList.add("selected");
-    	});
+      document.querySelectorAll('li[class~="selected"]').forEach((tag) => {
+        tag.classList.remove("selected");
+      });
+      document.querySelectorAll('nav a[href="' + href + '"]').forEach((tag) => {
+        tag.parentNode.classList.add("selected");
+      });
     }
     document.addEventListener('DOMContentLoaded', (event) => {
-    	document.querySelectorAll('a').forEach((tag) => {
-    		const href = tag.attributes['href'].nodeValue;
-    		tag.onclick = function() { selectMenu(href); };
-    	});
-    
+      document.querySelectorAll('a').forEach((tag) => {
+        const href = tag.attributes['href'].nodeValue;
+        tag.onclick = function() { selectMenu(href); };
+      });
+
     });
     window.addEventListener('popstate', function(e) {
-    	let hash = window.location.hash.substr(1);
-    	document.querySelectorAll('div[id="'+hash+'"]').forEach((tag) => {
-    		console.log("scroll "+hash);
-    		selectMenu("#" + hash);
-    		tag.scrollIntoView();
-    	});
+      let hash = window.location.hash.substr(1);
+      document.querySelectorAll('div[id="'+hash+'"]').forEach((tag) => {
+        console.log("scroll "+hash);
+        selectMenu("#" + hash);
+        tag.scrollIntoView();
+      });
     });
     </script>
     <style>
     html {
-    	margin: 0px;
-    	height: 100%
+      margin: 0px;
+      height: 100%
     }
     body {
-    	display: flex;
-    	margin: 0px;
-    	height: 100%;
-    	font-size: large;
+      display: flex;
+      margin: 0px;
+      height: 100%;
+      font-size: large;
     }
     body > * {
-    	overflow-y: scroll;
-    	flex: 1 1 auto;
-    	overflow-x: hidden;
-    	scroll-behavior: smooth;
+      overflow-y: scroll;
+      flex: 1 1 auto;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
     }
     nav {
-    	flex: 0 0 300px;
-    	background: #f1f1f1;
-    	white-space: nowrap;
-    	padding-left: 10px;
-    	font-size: medium;
+      flex: 0 0 300px;
+      background: #f1f1f1;
+      white-space: nowrap;
+      font-size: medium;
     }
     a {
-    	color: black;
-    	text-decoration: none;
+      color: black;
+      text-decoration: none;
     }
     nav ul {
-    	list-style-type:none;
-    	padding: 0px;
-    	margin: 0px;
+      list-style-type:none;
+      padding: 0px;
+      margin: 0px;
     }
     a:visited {}
     nav h1 {
-    	display: inline-flex;
-    	width: 100%;
-    	justify-content: center;
+      display: inline-flex;
+      width: 100%;
+      justify-content: left;
     }
-    
+
     nav h2 {
-    	font-size: 1.1em;
-    	margin: 0px;
-    	margin-top: 20px;
-    	padding: 0px;
-    	display: inline-flex;
-    	width: 100%;
-    	justify-content: center;
+      font-size: 1.1em;
+      margin: 0px;
+      margin-top: 20px;
+      padding: 0px;
+      display: inline-flex;
+      width: 100%;
+      justify-content: left;
     }
     nav a {
-    	display: inline-flex;
-    	width: 100%;
-    	justify-content: center;
-    
-    	padding: 3px;
+      display: inline-flex;
+      width: 100%;
+      justify-content: left;
     }
     /*nav a > span {
-    	display: inline-flex;
-    	width: 200px;
-    	justify-content: center;
+      display: inline-flex;
+      width: 200px;
+      justify-content: center;
     }*/
-    nav a:hover {
-    	background: #fff;
+    /*nav a:hover {
+      background: #fff;
+    }*/
+    nav li {
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 20px;
     }
+    nav li:hover {
+      background: #fff;
+    }
+
+
     nav div:last-child {
-    	margin-bottom: 100px;
+      margin-bottom: 100px;
     }
     body > div {
-    	padding-left: 20px;
-    	padding-right: 20px;
+      padding-left: 20px;
+      padding-right: 20px;
     }
-    
+
     body > div > div {
-    	padding-top: 30px;
+      padding-top: 30px;
     }
     body > div > div:last-child {
-    	padding-bottom: 50%;
+      padding-bottom: 50%;
     }
-    body li {
-    	padding: 5px;
+    body > div li {
+      margin-bottom: 10px;
     }
-    
+
     .inlineCode {
-    	background: lightgray;
-    	padding: 5px;
-    	border-radius: 5px;
-    	font-size: smaller;
+      background: lightgray;
+      padding: 5px;
+      border-radius: 5px;
+      font-size: smaller;
+      display: inline;
     }
-    a.selected {
-    	background: #ccc;
+    li.selected {
+      background: #ccc;
     }
     .code {
-    	background: lightgray;
-    	padding-left: 5px;
-    	border-radius: 5px;
+      background: lightgray;
+      padding-left: 5px;
+      border-radius: 5px;
     }
     .description {
-    	padding-top: 20px;
+      padding-top: 20px;
     }
     div.numbered.code {
-    	white-space: pre-wrap;
+      white-space: pre-wrap;
     }
     div.numbered.code:before {
-    	counter-reset: listing;
+      counter-reset: listing;
     }
     div.numbered.code code {
-    	counter-increment: listing;
+      counter-increment: listing;
     }
     div.numbered.code code::before {
-    	content: counter(listing) ". ";
-    	display: inline-block;
-    	width: 3em;
-    	text-align: right;
+      content: counter(listing) ". ";
+      display: inline-block;
+      width: 3em;
+      text-align: right;
     }
     .md.bold {
-    	font-weight: bold;
+      font-weight: bold;
     }
     .md.italic {
-    	font-style: italic
+      font-style: italic
     }
     .md.underline {
-    	text-decoration: underline;
+      text-decoration: underline;
     }
     .md.link {
-    	text-decoration: underline;
+      text-decoration: underline;
     }
     .md.link:hover {
-    	color: blue;
+      color: blue;
+
     }
-    
+
     </style>
         <title>
             SiLi        </title>
@@ -274,7 +283,7 @@
                 <h2>Free Vector Functions</h2>
                 <ul>
                     <li>
-                        <a href="#at"><span class="inlineCode">at&lt;Idx&gt;(v);</span></a>                    </li>
+                        <a href="#at5"><span class="inlineCode">at&lt;Idx&gt;(v);</span></a>                    </li>
                     <li>
                         <a href="#norm"><span class="inlineCode">norm(v)</span></a>                    </li>
                     <li>
@@ -380,7 +389,7 @@
             </div>
             <div id="_concept::Matrix">
                 <h2>Concept of a _concept::Matrix. - <span class="inlineCode">Matrix</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;typename T&gt; concept Matrix = is_matrix&lt;T&gt;::value or is_view&lt;T&gt;::value;</code>
                 </div>
                 <div class=description>
@@ -389,7 +398,7 @@
             </div>
             <div id="_concept::Vector">
                 <h2>Concept of a _concept::Vector. - <span class="inlineCode">Vector</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;typename T&gt; concept Vector = is_vector_v&lt;T&gt;;</code>
                 </div>
                 <div class=description>
@@ -398,7 +407,7 @@
             </div>
             <div id="Matrix">
                 <h2>Represents a matrix - <span class="inlineCode">Matrix</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template&lt;int _rows, int _cols, typename T&gt; requires (_rows &gt;= 0 and _cols &gt;= 0) class Matrix&lt;_rows, _cols, T&gt;;</code>
                 </div>
                 <div class=description>
@@ -426,7 +435,7 @@
             </div>
             <div id="View">
                 <h2>Represents a view onto a matrix - <span class="inlineCode">View</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template&lt;int _rows, int _cols, int _stride, typename T, bool _transposed&gt; requires (_rows &gt;= 0 and _cols &gt;= 0 and _stride &gt;= 0) class View&lt;_rows, _cols, _stride, T, _transposed&gt;;</code>
                 </div>
                 <div class=description>
@@ -456,7 +465,7 @@
             </div>
             <div id="at">
                 <h2>Access element - <span class="inlineCode">at(M&& m)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;int Row, int Col, _concept::Matrix M&gt; constexpr auto at(M&amp;&amp; m) -&gt; auto&amp;;</code>
                 </div>
                 <div class=description>
@@ -495,7 +504,7 @@ returns reference to underlying element
             </div>
             <div id="rows">
                 <h2>Number of rows - <span class="inlineCode">rows(M const& m)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto rows(M const&amp; m);</code>
                 </div>
                 <div>
@@ -521,7 +530,7 @@ number of <a class="md link" href="#rows">rows</a>
             </div>
             <div id="cols">
                 <h2>Number of columns - <span class="inlineCode">cols(M const& m)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto cols(M const&amp; m);</code>
                 </div>
                 <div>
@@ -547,7 +556,7 @@ number of columns
             </div>
             <div id="operator==">
                 <h2>Elementwise comparision - <span class="inlineCode">operator==(L const& l, R const& r)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix L, _concept::Matrix R&gt; requires (L::Rows == R::Rows and L::Cols == R::Cols) constexpr auto operator==(L const&amp; l, R const&amp; r) -&gt; bool;</code>
                 </div>
                 <div>
@@ -581,7 +590,7 @@ true if all elements are equal, otherwise false
             </div>
             <div id="operator!=">
                 <h2>Elementwise comparision - <span class="inlineCode">operator!=(L const& l, R const& r)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix L, _concept::Matrix R&gt; requires (L::Rows == R::Rows and L::Cols == R::Cols) constexpr auto operator!=(L const&amp; l, R const&amp; r) -&gt; bool;</code>
                 </div>
                 <div>
@@ -615,7 +624,7 @@ false if all element are equal, otherwise true
             </div>
             <div id="view_diag">
                 <h2>Diagonal view - <span class="inlineCode">view_diag(M&& m)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto view_diag(M&amp;&amp; m);</code>
                 </div>
                 <div>
@@ -647,7 +656,7 @@ false if all element are equal, otherwise true
             </div>
             <div id="diag">
                 <h2>Diagonal - <span class="inlineCode">diag(M const& m)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto diag(M const&amp; m);</code>
                 </div>
                 <div>
@@ -675,7 +684,7 @@ false if all element are equal, otherwise true
             </div>
             <div id="view_upper_diag">
                 <h2>Super diagonal view - <span class="inlineCode">view_upper_diag(M&& m)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto view_upper_diag(M&amp;&amp; m);</code>
                 </div>
                 <div>
@@ -709,7 +718,7 @@ false if all element are equal, otherwise true
             </div>
             <div id="view">
                 <h2>View - <span class="inlineCode">view(M&& m)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;int start_row, int start_col, int end_row, int end_col, _concept::Matrix M&gt;     requires (end_row &lt;= rows_v&lt;M&gt; and end_col &lt;= cols_v&lt;M&gt;) constexpr auto view(M&amp;&amp; m);</code>
                 </div>
                 <div>
@@ -750,7 +759,7 @@ false if all element are equal, otherwise true
             </div>
             <div id="join_rows">
                 <h2>Joins rows - <span class="inlineCode">join_rows(L const& l, R const& r)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix L, _concept::Matrix R&gt; requires (L::Rows == R::Rows) constexpr auto join_rows(L const&amp; l, R const&amp; r);</code>
                 </div>
                 <div>
@@ -784,7 +793,7 @@ false if all element are equal, otherwise true
             </div>
             <div id="join_cols">
                 <h2>Joins columns - <span class="inlineCode">join_cols(L const& l, R const& r)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix L, _concept::Matrix R&gt; requires (L::Cols == R::Cols) constexpr auto join_cols(L const&amp; l, R const&amp; r);</code>
                 </div>
                 <div>
@@ -820,7 +829,7 @@ false if all element are equal, otherwise true
             </div>
             <div id="det">
                 <h2>Compute determinant - <span class="inlineCode">det(M const& m)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix M&gt; requires (M::Rows == M::Cols and M::Rows &gt; 3) constexpr auto det(M const&amp; m);</code>
                 </div>
                 <div>
@@ -847,7 +856,7 @@ Determinant of m
             </div>
             <div id="cross">
                 <h2>Cross product of two vectors. - <span class="inlineCode">cross(L const& l, R const& r)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Vector L, _concept::Vector R&gt; requires (length_v&lt;R&gt; == 3 and length_v&lt;L&gt; == 3) constexpr auto cross(L const&amp; l, R const&amp; r);</code>
                 </div>
                 <div>
@@ -881,7 +890,7 @@ Determinant of m
             </div>
             <div id="sum">
                 <h2>Sum of all elements. - <span class="inlineCode">sum(M const& m)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto sum(M const&amp; m);</code>
                 </div>
                 <div>
@@ -908,7 +917,7 @@ Sum off all elements of m.
             </div>
             <div id="sum_rows">
                 <h2>Sum of each row. - <span class="inlineCode">sum_rows(M const& m)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto sum_rows(M const&amp; m);</code>
                 </div>
                 <div>
@@ -936,7 +945,7 @@ Column vector with the sums of each row of m
             </div>
             <div id="sum_cols">
                 <h2>Sum of each column. - <span class="inlineCode">sum_cols(M const& m)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto sum_cols(M const&amp; m);</code>
                 </div>
                 <div>
@@ -963,7 +972,7 @@ Row vector with the sums of each column of m
             </div>
             <div id="inv">
                 <h2>Compute inverse - <span class="inlineCode">inv(M m)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix M&gt; requires (M::Rows == M::Cols and M::Rows &gt; 3) constexpr auto inv(M m) -&gt; std::tuple&lt;typename M::value_t, M&gt;;</code>
                 </div>
                 <div>
@@ -992,7 +1001,7 @@ Returns tuple of determinant and inverse, if detereminant is zero the inverse is
             </div>
             <div id="view_trans">
                 <h2>Transposed view - <span class="inlineCode">view_trans(M&& m)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto view_trans(M&amp;&amp; m);</code>
                 </div>
                 <div>
@@ -1021,7 +1030,7 @@ Returns tuple of determinant and inverse, if detereminant is zero the inverse is
             </div>
             <div id="trans">
                 <h2>Transposed - <span class="inlineCode">trans(M&& m)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto trans(M&amp;&amp; m);</code>
                 </div>
                 <div>
@@ -1050,7 +1059,7 @@ Returns tuple of determinant and inverse, if detereminant is zero the inverse is
             </div>
             <div id="makeI">
                 <h2>Identity matrix - <span class="inlineCode">makeI()</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;int Rows, int Cols, typename T&gt; constexpr auto makeI();</code>
                 </div>
                 <div>
@@ -1079,7 +1088,7 @@ matrix with ones on the diagonal
             </div>
             <div id="makeI37">
                 <h2>Identity matrix - <span class="inlineCode">makeI()</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;int N, typename T&gt; constexpr auto makeI();</code>
                 </div>
                 <div>
@@ -1107,7 +1116,7 @@ matrix with ones on the diagonal
             </div>
             <div id="abs">
                 <h2>Compute abs - <span class="inlineCode">abs(M const& m)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto abs(M const&amp; m);</code>
                 </div>
                 <div>
@@ -1137,7 +1146,7 @@ the absolute values
             </div>
             <div id="operator+">
                 <h2>Copy of m - <span class="inlineCode">operator+(M const& m)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto operator+(M const&amp; m);</code>
                 </div>
                 <div>
@@ -1165,7 +1174,7 @@ copy of m with <span class="md inlineCode">+</span> applied to every element
             </div>
             <div id="operator+9">
                 <h2>Elementwise addition - <span class="inlineCode">operator+(L const& l, R const& r)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix L, _concept::Matrix R&gt; constexpr auto operator+(L const&amp; l, R const&amp; r);</code>
                 </div>
                 <div>
@@ -1198,7 +1207,7 @@ copy of m with <span class="md inlineCode">+</span> applied to every element
             </div>
             <div id="operator+=">
                 <h2>Elementwise addition - <span class="inlineCode">operator+=(L&& l, R const& r)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix L, _concept::Matrix R&gt; constexpr auto operator+=(L&amp;&amp; l, R const&amp; r) -&gt; auto&amp;;</code>
                 </div>
                 <div>
@@ -1231,7 +1240,7 @@ reference to l
             </div>
             <div id="operator-">
                 <h2>Elementwise negation - <span class="inlineCode">operator-(M const& m)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix M&gt; constexpr auto operator-(M const&amp; m);</code>
                 </div>
                 <div>
@@ -1259,7 +1268,7 @@ reference to l
             </div>
             <div id="operator-12">
                 <h2>Elementwise subtraction - <span class="inlineCode">operator-(L const& l, R const& r)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix L, _concept::Matrix R&gt; constexpr auto operator-(L const&amp; l, R const&amp; r);</code>
                 </div>
                 <div>
@@ -1292,7 +1301,7 @@ matrix with (l - r)
             </div>
             <div id="operator-=">
                 <h2>Elementwise subtraction - <span class="inlineCode">operator-=(L& l, R const& r)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix L, _concept::Matrix R&gt; constexpr auto operator-=(L&amp; l, R const&amp; r) -&gt; auto&amp;;</code>
                 </div>
                 <div>
@@ -1325,7 +1334,7 @@ reference to l
             </div>
             <div id="operator*">
                 <h2>Matrix multiplication - <span class="inlineCode">operator*(L const& l, R const& r)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix L, _concept::Matrix R&gt; requires (L::Cols == R::Rows) constexpr auto operator*(L const&amp; l, R const&amp; r);</code>
                 </div>
                 <div>
@@ -1359,7 +1368,7 @@ reference to l
             </div>
             <div id="operator*15">
                 <h2>Scalar multiplication - <span class="inlineCode">operator*(L const& l, value_t<L> const& s)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix L&gt; constexpr auto operator*(L const&amp; l, value_t&lt;L&gt; const&amp; s);</code>
                 </div>
                 <div>
@@ -1388,7 +1397,7 @@ reference to l
             </div>
             <div id="operator*16">
                 <h2>Scalar multiplication - <span class="inlineCode">operator*(value_t<R> const& s, R&& r)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix R&gt; constexpr auto operator*(value_t&lt;R&gt; const&amp; s, R&amp;&amp; r);</code>
                 </div>
                 <div>
@@ -1417,7 +1426,7 @@ reference to l
             </div>
             <div id="operator*=">
                 <h2>Scalar multiplication - <span class="inlineCode">operator*=(L&& l, value_t<L> const& s)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix L&gt; constexpr auto operator*=(L&amp;&amp; l, value_t&lt;L&gt; const&amp; s) -&gt; auto&amp;;</code>
                 </div>
                 <div>
@@ -1446,7 +1455,7 @@ Referenc to l
             </div>
             <div id="operator/">
                 <h2>Divide elements by a scalar - <span class="inlineCode">operator/(L const& l, value_t<L> const& s)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix L&gt; constexpr auto operator/(L const&amp; l, value_t&lt;L&gt; const&amp; s);</code>
                 </div>
                 <div>
@@ -1475,7 +1484,7 @@ Referenc to l
             </div>
             <div id="operator/=">
                 <h2>Divide elementwise by a scalar - <span class="inlineCode">operator/=(L&& l, value_t<L> const& s)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Matrix L&gt; constexpr auto operator/=(L&amp;&amp; l, value_t&lt;L&gt; const&amp; s) -&gt; L&amp;;</code>
                 </div>
                 <div>
@@ -1502,9 +1511,9 @@ reference to l
                 </div>
                 <hr/>
             </div>
-            <div id="at">
+            <div id="at5">
                 <h2>Access element - <span class="inlineCode">at(V&& v)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;int Idx, _concept::Vector V&gt; constexpr auto at(V&amp;&amp; v) -&gt; auto&amp;;</code>
                 </div>
                 <div class=description>
@@ -1536,7 +1545,7 @@ returns reference to underlying element
             </div>
             <div id="norm">
                 <h2>Compute norm - <span class="inlineCode">norm(V const& v)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Vector V&gt; constexpr auto norm(V const&amp; v);</code>
                 </div>
                 <div>
@@ -1564,7 +1573,7 @@ the <a class="md link" href="#norm">norm</a> (also considered as the length).
             </div>
             <div id="dot">
                 <h2>Dot product of two vectors - <span class="inlineCode">dot(L const& l, R const& r)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Vector L, _concept::Vector R&gt; requires(length_v&lt;L&gt; == length_v&lt;R&gt;) constexpr auto dot(L const&amp; l, R const&amp; r);</code>
                 </div>
                 <div>
@@ -1596,7 +1605,7 @@ the dot product (also called scalar product) of l and r. l and r must be vectors
             </div>
             <div id="outerProd">
                 <h2>Outer product - <span class="inlineCode">outerProd(L const& l, R const& r)</span></h2>
-                <div class="code language-cpp">
+                <div class="inlineCode language-cpp">
 <code class="language-cpp">template &lt;_concept::Vector L, _concept::Vector R&gt; constexpr auto outerProd(L const&amp; l, R const&amp; r);</code>
                 </div>
                 <div>
